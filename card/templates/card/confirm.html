@@ -1,0 +1,59 @@
+{% extends 'card/basic.html' %}
+{% block css %}
+<style>
+.container{
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container .main{
+    height: 90%;
+    width: 65%;
+    background-image: url("/static/card/img_confirm.png");
+    background-repeat: no-repeat;
+    background-size: 100% 90%;
+    display: flex;
+    justify-content:center;
+    align-items:flex-end;
+}
+.container .main .content .contain1{
+    display: flex;
+    justify-content: center;
+    color: green;
+}
+.container .main .content .contain2{
+    display: flex;
+    justify-content: center;
+    color: red;
+}
+.container .main .content .contain2 b{
+    color: black;
+}
+.container .main .content .contain3{
+    display: flex;
+    justify-content: center;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="main">
+        <div class="content">
+            <div class="contain1">
+                <h4>Your order has been confirmed</h4><br>
+            </div>
+            <div class="contain2 mt-1">
+                <h5>Your order id is 
+                {% for detail in details %}
+                <b>{{detail.order_id}}</b>
+                {% endfor %}
+            </h5>
+            </div>
+            <div class="contain3 mt-1">
+                <a href="/card/track/"><button type="submit" class="btn btn-primary">Track order</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

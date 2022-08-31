@@ -1,0 +1,91 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+Product - Shopping
+{% endblock %}
+{% block css %}
+<style>
+    .container {
+        display: block;
+    }
+
+    .container .card {
+        height: 100%;
+        display: inline-block;
+        margin-left: 20px;
+        margin-top: 20px;
+        border: none;
+    }
+
+    .container .card img {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+{% endblock %} {% block content %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} mt-2" role="alert">
+    {{message}}
+  </div>
+{% endfor %}
+{% if products|length < 1 %}
+<div class="container mt-5">
+  <h4>Your Serch - <b>{{searchdata|truncatechars:300}}</b></h4>
+  <h3>No record found</h3>
+  <li>Make sure that all words are spelled correctly.</li>
+  <li>Try different keywords.</li>
+  <li>Try more general keywords.</li>
+</div>
+{% endif %}
+<div class="container">
+    {% for i in products %}
+    <div class="card" style="width: 18rem">
+        <img src="/media/{{i.image}}" class="card-img-top" alt="" />
+        <div class="card-body">
+            <h5 class="card-title">{{i.product_name}}</h5>
+            <p class="card-text">{{i.product_detail}}</p>
+            <p class="card-text"><b> ₹ <span id="price{{i.id}}">{{i.price}}</span>/-</b></p>
+            <a href="/card/checklist/{{i.id}}"><button class="btn btn-primary cart mt-1">View</button></a>
+            <button class="btn btn-primary mt-1 order" id="pr{{i.id}}">
+                Add to Cart
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} {% block js%}
+<script>
+    if (localStorage.getItem("cart") == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    function updatecart(cart) {
+        var count = 0;
+        for (var item in cart) {
+            count = count + cart[item][0];
+            document.getElementById("carts").innerText = count;
+        }
+    }
+    qty = 1
+    updatecart(cart);
+    $(".order").click(function(){
+        var idstr = this.id.toString();
+        console.log(idstr);
+        text  = idstr.slice(2, )
+        console.log(text)
+        price = document.getElementById("price"+text).innerText
+        console.log(price)
+        cart[idstr] = [qty,price];
+        qty = cart[idstr][0] + 1
+        console.log("Qty" + qty)
+        price = cart[idstr][1]
+        console.log(price)
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updatecart(cart);
+    });
+    document.getElementById('carts').addEventListener('click',function(){
+        orders(cart);
+    })
+    
+</script> 
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends 'card/basic.html' %}
+{% block css %}
+<style>
+.container{
+    width: 70%;
+}
+.content{
+    height: 100%;
+    width: 70%;
+    margin-left: 15%;
+}
+.content .box{
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.content .box .box1{
+    height: 100%;
+    width: 50%;
+}
+.content .box .box2{
+    height: 100%;
+    width: 50%;
+    text-align: right;
+}
+.main .block{
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+.main a{
+    list-style: none;
+    color: black;
+    text-decoration: none;
+}
+.main .block .box1{
+    height: 100%;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+.main .block .box2{
+    height: 100%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+}
+.main .block .box3{
+    height: 100%;
+    width: 20%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+.main .block .box{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main .block .box3 button{
+    border: none;
+    background-color: cornflowerblue;
+    color: white;
+    border-radius: 5px;
+}
+
+@media screen and (max-width:600px){
+    .content{
+        width: 96%;
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <form action="/card/track/" method="post">{% csrf_token %}
+        <input type="hidden" name="productid" id="productid" >
+        <div class="contain row g-3">
+            <div class="col-md-6">
+                <label for="inputCity" class="form-label">Enter Mobile Number</label>
+                <input type="number" name="number" class="form-control" id="number" required>
+            </div>
+            <div class="col-md-6">
+                <label for="orderid" class="form-label">Enter order ID</label>
+                <input type="number" class="form-control" name="orderid" id="orderid" required>
+            </div>
+        </div>
+          <button type="submit" id="data" class="btn btn-primary mt-3">Submit</button>
+    </form>
+</div>
+{% if status == 1 %}
+    <div class="content mt-4">
+        <div class="contain">
+            <input type="hidden" name="prog" id="prog" value="{{progesses}}">
+            <div class="progress mt-5">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" id="progress" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+        <div class="box mt-3">
+            <div class="box1">
+                <h4>Order Date: {{order_date}}</h4><br>
+                <h4></h4>
+            </div>
+            <div class="box2">
+                <h4>Delivered at {{delivery_date}}</h4><br>
+            </div>
+        </div>
+        <div class="main mt-3">
+            <h4>Your items</h4>
+            {% for i in products %}
+            <a href="/card/checklist/{{i.id}}">
+                <div class="block mt-3">
+                    <div class="box1 mx-1"><b>{{i.product_name}}</b></div>
+                    <div class="box2"><b id="price{{i.id}}"></b></div>
+                    <div class="box3 mx-1"><button><b id="pr{{i.id}}"></b></button></div>
+                </div>
+            </a>
+            {% endfor %}
+            <div class="block mt-3">
+                <div class="box"><b>Total Price - ₹ </b><b id="total"></b></div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="main mt-5">
+        <h3 class="mx-3">Please Enter Order ID and show status</h3>
+    </div>
+    {% endif %}
+{% endblock %}
+{% block js %}
+<script>
+    var ordercart1 = JSON.parse(localStorage.getItem("finalitem1"));
+    var ordercart2 = JSON.parse(localStorage.getItem("finalitem2"));
+    var total = 0;
+    var arr = []
+    if(ordercart1 != null ){
+        orderitems1(ordercart1);
+        progressbar();
+        updateitem1(ordercart1);
+        total = total + t1;
+    }
+    else{
+        console.log("Sorry")
+    }
+    if(ordercart2 != null){
+        orderitems2(ordercart2);
+        progressbar();
+        updateitem2(ordercart2);
+        total = total + t2;
+    }
+    else{
+        console.log("Sorry")
+    }
+    document.getElementById("total").innerText = String(total);
+    function orderitems1(ordercart1){
+        for(var items in ordercart1){
+            i = items.slice(2, );
+            arr.push(i)
+        }
+        document.getElementById("productid").setAttribute("value",arr);
+    }
+    function orderitems2(ordercart2){
+        for(var items in ordercart2){
+            i = items.slice(3, );
+            arr.push(i)
+        }
+        document.getElementById("productid").setAttribute("value",arr);
+    }
+
+    function progressbar(){
+        var val = $("#prog").val();
+        document.getElementById("progress").style.width = val + "%";
+    }
+
+    function updateitem1(ordercart1){
+        for(var items in ordercart1){
+            id = items.slice(2, );
+            document.getElementById("price" + id).innerText = "₹ " + ordercart1[items][1];
+            document.getElementById("pr" + id).innerText =  ordercart1[items][0];
+            total1 =  ordercart1[items][3].slice(1, );
+            t1 = parseInt(total1);
+        }
+    }
+    function updateitem2(ordercart2){
+        for(var item in ordercart2){
+            id = item.slice(3, );
+            document.getElementById("price" + id).innerText = "₹ " + ordercart2[item][1];
+            document.getElementById("pr" + id).innerText =  ordercart2[item][0];
+            total2 = ordercart2[item][3];
+            t2 = parseInt(total2);
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+contact us - Help
+{% endblock %}
+{% block css %}
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>How can i help you?</h2>
+<form action="/card/contact/" method="post">{% csrf_token %}
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Enter Full Name</label>
+        <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+      </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Enter Mobile Number</label>
+      <input type="number" name="number" class="form-control" id="exampleInputPassword1" required>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Enter Your Problem </label>
+        <textarea class="form-control" name="message" id="exampleFormControlTextarea1" rows="3" required></textarea>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+        <label class="form-check-label" for="exampleCheck1">Terms And Condition</label>
+      </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+Checklist
+{% endblock %}
+{% load humanize %}
+{% block css %}
+<style>
+    .container{
+        display: flex;
+    }
+    .container .imgbox{
+        display: inline-block;
+        height: 500px;
+        width: 40%;
+    }
+    .container .content{
+        display: inline-block;
+        height: 500px;
+        width: 50%;
+    }
+    .container .imgbox img{
+        height: 100%;
+        width: 100%;
+    }
+    .container1{
+        height: 100%;
+        width: 80%;
+        margin-left: 10%;
+    }
+    .container1 .contain{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .container1 .contain .imagebox{
+        height: 100%;
+        width: 5%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container1 .contain .imagebox i{
+        font-size: 50px;
+    }
+    .container1 .contain .containblock{
+        height: 100%;
+        width: 95%;
+        padding-left: 10px;
+    }
+    .container1 .contain .containblock p{
+        width: 100%;
+        word-break: break-all;
+    }
+    .username{
+        font-size: 20px;
+    }
+    @media screen and (max-width: 1200px){
+        .container .imgbox{
+            height: 400px;
+            width: 30%;
+        }
+        .container .content{
+            margin-left: 50px;
+        }
+        .container1 .contain .imagebox i{
+            font-size: 40px;
+        }
+    }
+    @media screen and (max-width: 992px){
+        .container .imgbox{
+            height: 300px;
+            width: 30%;
+        }
+    }
+    @media screen and (max-width: 900px){
+        .container .imgbox{
+            height: 300px;
+            width: 40%;
+        }
+        .container1 .contain .imagebox i{
+            font-size: 30px;
+        }
+    }
+    @media screen and (max-width: 767px){
+        .container .imgbox{
+            height: 300px;
+            width: 45%;
+        }
+        .container1{
+            width: 95%;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+    @media screen and (max-width: 700px){
+        .container{
+            flex-wrap: wrap;
+        }
+        .container .imgbox{
+            height: 350px;
+            width: 80%;
+        }
+        .container .content{
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 500px){
+        .container .content h1{
+            font-size: 30px;
+        }
+        .container .content h3{
+            font-size: 25px;
+        }
+        .container .content h5{
+            font-size: 20px;
+        }
+    }
+    @media screen and (max-width: 400px){
+        .container1 .contain .imagebox{
+            width: 8%;
+        }
+        .container1 .contain .containblock{
+            width: 92%;
+        }
+        .container .imgbox{
+            height: 350px;
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    {% for i in prod %}
+    <div class="imgbox">
+        <img src="/media/{{i.image}}" alt="">
+    </div>
+    <div class="content">
+        <h1 id="name{{i.id}}">Product Name - {{i.product_name}}</h1>
+        <br><br>
+        <h3>{{i.product_detail}}</h3>
+        <br><br>
+        <h5>Category - {{i.category}}</h5>
+        <h5>Publish Date - {{i.pub_date}}</h5>
+        <h5>Price - <b>₹ <span id="price{{i.id}}">{{i.price}}</span></b></h5><br>
+        <a href="/card/orderdetails/"><button class="btn btn-primary buyer" id="buy{{i.id}}">Buy Now</button></a>
+        <button class="btn btn-primary order" id="pr{{i.id}}">Add to Cart</button>
+    </div>
+    {% endfor %}
+</div>
+<div class="container1">
+    {% if user.is_authenticated %}
+    <form action="/card/review/" method="post">{% csrf_token %}
+        <div class="mb-3">
+            <label for="review" class="form-label"><h5>Enter your review</h5></label>
+            <input type="hidden" name="pro_id" id="pro_id" value="{{pro_id}}">
+            <textarea class="form-control" name="review" id="review" rows="3"></textarea>
+          </div>
+        <button type="submit" class="btn btn-primary mb-2">Add</button>
+      </form>
+    {% else %}
+    <div class="container">
+        <h3>Please first you goto login that you can comment!</h3>
+    </div>
+    {% endif %}
+    {% for i in data %}
+    <div class="contain mt-2">
+        <div class="imagebox" >
+            <i class='fas'>&#xf406;</i>
+        </div>
+        <div class="containblock">
+            <b class="username">{{i.user}}</b>
+            {{i.timestamp | naturaltime}} <br>
+            <p><b>{{i.review}}</b></p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block js%}
+<script>
+    if (localStorage.getItem("cart") == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    function updatecart(cart) {
+        var count = 0;
+        for (var item in cart) {
+            count = count + cart[item][0];
+            document.getElementById("carts").innerText = count;
+        }
+    }
+    qty = 1
+    updatecart(cart);
+    $(".order").click(function(){
+        var idstr = this.id.toString();
+        text  = idstr.slice(2, )
+        document.getElementById("pro_id").setAttribute("value",text);
+        price = document.getElementById("price"+text).innerText;
+        cart[idstr] = [qty,price];
+        qty = cart[idstr][0] + 1
+        price = cart[idstr][1]
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updatecart(cart);
+    });
+    document.getElementById('carts').addEventListener('click',function(){
+        orders(cart);
+    })
+    buyitem = {}
+    $(".buyer").click(function(){
+        let id = this.id.toString();
+        let text = id.slice(3, )
+        let name = document.getElementById("name" + text).innerText;
+        let price = document.getElementById("price" + text).innerText;
+        buyitem[id] = [1,price,name,price]
+        localStorage.setItem("buyitem",JSON.stringify(buyitem))
+    });
+</script>
+{% endblock %}

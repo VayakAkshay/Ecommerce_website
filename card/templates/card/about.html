@@ -1,0 +1,68 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+About Us
+{% endblock %}
+{% block css %}
+<style>
+    .container1{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container1 .block{
+        height: 600px;
+        width: 45%;
+        background-image: url('/static/card/shoppings.jpg');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    .container .content h3{
+        text-align: center;
+    }
+
+    @media screen and (max-width: 700px){
+      .container1 .block{
+        width: 55%;
+      }
+    }
+    @media screen and (max-width: 550px){
+      .container1 .block{
+        width: 70%;
+      }
+    }
+    @media screen and (max-width: 400px){
+      .container1 .block{
+        width: 100%;
+      }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container1 mt-5">
+    <div class="block">
+
+    </div>
+</div>
+<div class="container mt-3">
+    <div class="content">
+        <h3>About Us</h3>
+        <h5>Shoppers Stop is home to a multitude of leading international and national brands for apparels, fragrances, accessories, cosmetics, footwear, home décor and furnishings catering to the needs of the entire family. We aspire to provide our customers a memorable international shopping experience. We are one of the largest chain of department stores across India. <br><br>
+            <b>Our Vision Is,</b><br><br>
+            <i>“To be an inspirational and trusted brand, transforming customers' lives through fashion and delightful shopping experience every time”</i><br><br>
+            We have a team of professional associates who strive endlessly to provide the best shopping experience to each of our customers. We have adopted a new philosophy of "Start Something New" to give retail a new dimension and innovation is our key driver to attain excellence in customer service. <br><br>
+            <b>WHY SHOP WITH US</b><br><br>
+            <li><b>SIMPLE SHOPPING</b></li><br>
+            Whether you shop online or in store or any of the leading third party marketplaces you get the same experience in terms of merchandise, price & service. <br><br>
+            <li><b>SECURE SHOPPING</b></li><br>
+            Shopping on our website is 100% safe and secure as we do not store complete details or payment information of your credit/debit card in our system. This is information is directly transmitted securely to the bank for payment processing. However, caution must always be taken by the customer while making transactions on any online venue. <br><br>
+            <li><b>RANGE OF PRODUCTS AND BRANDS</b></li><br>
+            We assort the collection from the best brands, trends, colours, fabrics, patterns to bring you a deep fashion selection wide across Men, Women, Kids, Fashion Accessories, and Home categories. <br><br>
+            <li><b>100% ORIGINAL</b></li><br>
+            We are responsible for what we sell and guarantee the originality of the products. All our products are sourced directly from the brands and carry brand warranty and genuineness certificate. <br><br>
+        </h5>
+    </div>
+</div>
+{% endblock %}
+{% block container %}
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+Product - Shopping
+{% endblock %}
+{% block css %}
+<style>
+    .container {
+        display: block;
+    }
+
+    .container .card {
+        height: 100%;
+        width: 18rem;
+        display: inline-block;
+        margin-left: 20px;
+        margin-top: 20px;
+        border: none;
+    }
+
+    .container .card img {
+        height: 100%;
+        width: 100%;
+    }
+    @media screen and (max-width: 350px){
+        .container .card{
+            width: 16rem;
+        }
+    }
+    @media screen and (max-width: 300px){
+        .container .card{
+            width: 14rem;
+        }
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="container">
+    {% for i in product %}
+    <div class="card" >
+        <img src="/media/{{i.image}}" class="card-img-top" alt="" />
+        <div class="card-body">
+            <h5 class="card-title">{{i.product_name}}</h5>
+            <p class="card-text">{{i.product_detail}}</p>
+            <p class="card-text"><b> ₹ <span id="price{{i.id}}">{{i.price}}</span>/-</b></p>
+            <a href="/card/checklist/{{i.id}}" ><button class="btn btn-primary cart mt-1">View</button></a>
+            <button class="btn btn-primary mt-1 order" id="pr{{i.id}}">
+                Add to Cart
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} {% block js%}
+<script>
+    if (localStorage.getItem("cart") == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    function updatecart(cart) {
+        var count = 0;
+        for (var item in cart) {
+            count = count + cart[item][0];
+            document.getElementById("carts").innerText = count;
+        }
+    }
+    qty = 1
+    updatecart(cart);
+    $(".order").click(function(){
+        var idstr = this.id.toString();
+        text  = idstr.slice(2, )
+        price = document.getElementById("price"+text).innerText
+        cart[idstr] = [qty,price];
+        // qty = cart[idstr][0] + 1
+        price = cart[idstr][1]
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updatecart(cart);
+    });
+    document.getElementById('carts').addEventListener('click',function(){
+        orders(cart);
+    })
+</script> 
+{% endblock %}

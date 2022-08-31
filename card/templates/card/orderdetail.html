@@ -1,0 +1,94 @@
+{% extends 'card/basic.html' %}
+{% block css %}
+<style>
+    .container{
+        width: 70%;
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% for message in messages %}
+  <div class="alert alert-{{message.tags}} mt-0 mx-0v mb-0" id="alert" role="alert">
+    {{message}}
+  </div>
+  {% endfor %}
+<div class="container mt-5">
+    <form action="/card/orderdetails/" method="post">{% csrf_token %}
+            <div class="mb-3">
+            <label for="name" class="form-label">Enter Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Enter Your Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Enter Mobile Number</label>
+            <input type="number" class="form-control" name="number" id="number" placeholder="Enter Mobile Number" required>
+          </div>
+          <div class="mb-3">
+            <label for="address" class="form-label">Enter Address</label>
+            <textarea class="form-control" name="address" id="address" rows="3" required></textarea>
+          </div>
+          <div class="contain row g-3">
+            <div class="col-md-6">
+                <label for="inputCity" class="form-label">City</label>
+                <input type="text" name="city" class="form-control" id="city" required>
+              </div>
+              <div class="col-md-4">
+                <label for="inputState" class="form-label">State</label>
+                <select id="inputState" name="state" class="form-select" required>
+                  <option selected>Andhra Pradesh</option>
+                  <option>Arunachal Pradesh</option>
+                  <option>Assam</option>
+                  <option>Bihar</option>
+                  <option>Chhattisgarh</option>
+                  <option>Goa</option>
+                  <option>Gujarat</option>
+                  <option>Haryana</option>
+                  <option>Himachal Pradesh</option>
+                  <option>Jharkhand</option>
+                  <option>Karnataka</option>
+                  <option>Kerala</option>
+                  <option>Madhya Pradesh</option>
+                  <option>Maharashtra</option>
+                  <option>Manipur</option>
+                  <option>Meghalaya</option>
+                  <option>Mizoram</option>
+                  <option>Nagaland</option>
+                  <option>Odisha</option>
+                  <option>Punjab</option>
+                  <option>Rajasthan</option>
+                  <option>Sikkim</option>
+                  <option>Tamil Nadu</option>
+                  <option>Telangana</option>
+                  <option>Tripura</option>
+                  <option>Uttarakhand</option>
+                  <option>Uttar Pradesh</option>
+                  <option>West Bengal</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="inputZip" class="form-label">Zip</label>
+                <input type="number" class="form-control" name="pin" id="inputZip" required>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="gridCheck">
+                  <label class="form-check-label" for="gridCheck">
+                    Terms and conditions
+                  </label>
+                </div>
+              </div>
+          </div>
+          <button type="submit" class="btn btn-primary mt-3" id="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+  let ordercart = JSON.parse(localStorage.getItem("ordercart"))
+  let buyitem = JSON.parse(localStorage.getItem("buyitem"))
+  document.getElementById("submit").addEventListener("click",function(){
+    localStorage.setItem("finalitem1",JSON.stringify(ordercart));
+    localStorage.setItem("finalitem2",JSON.stringify(buyitem));
+    // localStorage.removeItem("buyitem");
+  })
+</script>
+{% endblock %}

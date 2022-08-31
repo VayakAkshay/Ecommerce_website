@@ -1,0 +1,1 @@
+web: waitress-serve --port=2000 Ecom.wsgi:application 

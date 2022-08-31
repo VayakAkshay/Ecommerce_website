@@ -1,0 +1,362 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+Your Orders
+{% endblock %}
+{% block css %}
+<style>
+    .containers{
+        display: flex;
+    }
+    .containers .box1{
+        height: 80vh;
+        width: 70%;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        overflow: scroll;
+    }
+    ::-webkit-scrollbar {
+        width: 0;  
+        background: transparent;  
+    }
+    .containers .box1 .content{
+        height: 250px;
+        width: 100%;
+        display: flex;
+    }
+    .containers .box1 .content .image{
+        height: 100%;
+        width: 30%;
+    }
+    .containers .box1 .content .contain{
+        height: 100%;
+        width: 75%;
+        padding-top: 10px;
+        padding-left: 20px;
+    }
+    .containers .box1 .content .image img{
+        height: 100%;
+        width: 100%;
+    }
+    .containers .box2{
+        height: 80vh;
+        width: 30%;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+    .containers .box2 .main{
+        height: 50%;
+        width: 100%;
+        /* display: flex; */
+    }
+    .containers .box2 .main .contents1{
+        height: 50%;
+        width: 50%;
+        margin-left: 10px;
+    }
+    .containers .box2 .main .contents2{
+        height: 50%;
+        width: 50%;
+        text-align: right;
+        margin-right: 10px;
+    }
+    .containers .box2 h4{
+        color: gray;
+        margin-top: 5px;
+        margin-left: 10px;
+    }
+    .containers .box2 .main .contents2 .total{
+        font-size: 21.4px;
+    }
+    .containers .box2 .buy{
+        height: 20%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+    }
+    .containers .box2 .buy .buy-pro{
+        height: 50px;
+        width: 150px;
+        border-radius: 0;
+        font-size: 18px;
+    }
+    .containers .box2 .main .pricebox{
+        height: 50px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    @media screen and (max-width: 1000px){
+        .containers{
+            flex-wrap: wrap;
+        }
+        .containers .box1{
+            height: 100%;
+            width: 100%;
+            box-shadow: none;
+            scroll-behavior:unset;
+
+        }
+        .containers .box2{
+            box-shadow: none;
+            margin-top: 20px;
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 991px){
+        .containers{
+            flex-wrap: wrap;
+            height: 100%;
+        }
+        .containers .box1{
+            height: 100%;
+            width: 100%;
+            box-shadow: none;
+            scroll-behavior:unset;
+
+        }
+        .containers .box2{
+            box-shadow: none;
+            margin-top: 20px;
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 800px){
+        .containers .box1 .content .image{
+            height: 100%;
+            width: 40%;
+        }
+    }
+    @media screen and (max-width: 600px){
+        .containers .box1 .content .image{
+            height: 100%;
+            width: 45%;
+        }
+    }
+    @media screen and (max-width: 500px){
+        .containers .box1 .content .image{
+            height: 80%;
+            width: 45%;
+        }
+    }
+    @media screen and (max-width: 400px){
+        .containers .box1 .content .image{
+            height: 50%;
+            width: 40%;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="containers mt-5" id="main">
+    <div class="box1 mx-2">
+        <div class="mystr"></div>
+        {% for i in prod %}
+        <div class="content">
+            <div class="image">
+                <img src="/media/{{i.image}}" alt="">
+            </div>
+            <div class="contain">
+                <h3><span id="names{{i.id}}">{{i.product_name}}</span></h3>
+                <h4>{{i.product_detail}}</h4><br>
+                <button class="btn btn-primary mx-2 minus" id="pr{{i.id}}"><b>-</b></button><span id="pm{{i.id}}"><b>1</b></span>
+                <button class="btn btn-primary mx-2 plus" id="pr{{i.id}}"><b>+</b></button><br><br>
+                <h6><b>₹ <span id="price{{i.id}}">{{i.price}}</span>/-</b></h6>
+            </div>
+        </div><hr>
+        {% endfor %}
+    </div>
+    <div class="box2 mx-2">
+        <h4>Price Details</h4><hr>
+        <div class="main">
+            <div class="pricebox mt-2">
+                <h5>Price</h5>
+                <span id="totalprice" class="total"></span>
+            </div>
+            <div class="pricebox mt-2">
+                <h5>Discount</h5>
+                <span class="total" id="discounts" style="color: green;"></span>
+            </div>
+            <div class="pricebox mt-2" >
+                <h5>Delivery Charges</h5>
+                <span class="total" id="deliverycharge"></span>
+            </div><hr>
+            <div class="pricebox mt-2">
+                <h5>Total Amount</h5>
+                <span class="total" id="mainprice"></span>
+            </div>
+        </div>
+        <div class="buy">
+            {% if user.is_authenticated %}
+                <input type="hidden" id="orderid" name="orderid">
+                <button class="btn btn-primary buy-pro mx-1" id="clearitem">
+                    Clear Cart
+                </button>
+                <a href="/card/orderdetails/">
+                    <button class="btn btn-primary buy-pro mx-1" id="placeorder">
+                        Place Order
+                    </button>
+                </a>
+            {% else %}
+            <h5 class="mx-4">Please, you can first loggedin to place order</h5>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="conteiner mt-5" id="emptycart">
+    <h2>Your Cart is Empty</h2>
+</div>
+{% endblock %}
+{% block js%}
+<script>
+    if (localStorage.getItem("cart") == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    if($.isEmptyObject(cart)){
+        $(".mystr").innerHTML = "<h4>No Any Item In Cart Please Go to Shopping</h4>";
+    }
+    function updatecart(cart) {
+        var count = 0;
+        for (var item in cart) {
+            count = count + cart[item][0];
+            document.getElementById("carts").innerText = count;
+        }
+    }
+    function update(cart) {
+        for (var item in cart) {
+            var text = item.toString();
+            let id = text.slice(2,);
+            document.getElementById('pm' + id).innerHTML = "<b>" + cart[item][0] + "</b>";
+        }
+    }
+    document.getElementById("emptycart").style.display = "none";
+    function totalprice(cart){
+        totalprices = 0;
+        var discount = 0;
+        charge = 0
+        for(var item in cart){
+            var text = item.slice(2, )
+            price = cart[item][1]
+            qty = cart[item][0]
+            var total = price * qty;
+            totalprices = totalprices + total;
+        }
+        if(totalprices>2000 && totalprices<=5000){
+            discount = 200;
+            charge = 150;
+        }
+        else if(totalprices>5000 && totalprices<=20000){
+            discount = 700;
+            charge = 100;
+        }
+        else if(totalprices>20000 && totalprices<=50000){
+            discount = 1500;
+            charge = 50;
+        }
+        else if(totalprices>=50000){
+            discount = 5000;
+            charge = 0;
+        }
+        document.getElementById('totalprice').innerHTML = "<b>" + "₹" + totalprices + "<b>";
+        document.getElementById('discounts').innerHTML = "<b>" + "- ₹" + discount + "<b>";
+        document.getElementById('deliverycharge').innerHTML = "<b>" + "₹" + charge + "<b>";
+        var mainprice = totalprices - discount + charge;
+        document.getElementById('mainprice').innerHTML = "<b>" + "₹" + mainprice + "<b>";
+    }
+    totalprice(cart);
+    update(cart);
+    updatecart(cart);
+    $(".minus").click(function () {
+        var idstr = this.id.toString();
+        var text = idstr.slice(2, )
+        if (cart[idstr][0] != undefined) {
+            cart[idstr][0] = cart[idstr][0] - 1;
+        } else {
+            cart[idstr][0] = 1;
+        }
+        if (cart[idstr][0] < 1) {
+            cart[idstr][0] = 1;
+        }
+        if (cart[idstr][0] > 20) {
+            cart[idstr][0] = 20;
+            alert("Maximum Quantity is 20!!!")
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        update(cart);
+        updatecart(cart);
+        orders(cart);
+        price = cart[idstr][1];
+        qty = cart[idstr][0];
+        var total = price * qty;
+        document.getElementById("price" + text).innerText = total;
+        totalprice(cart);
+    })
+    $(".plus").click(function () {
+        var idstr = this.id.toString();
+        var text = idstr.slice(2, )
+
+        if (cart[idstr][0] != undefined) {
+            cart[idstr][0] = cart[idstr][0] + 1;
+        } else {
+            cart[idstr][0] = 1;
+        }
+        if (cart[idstr][0] < 1) {
+            cart[idstr][0] = 1;
+        }
+        if (cart[idstr][0] > 20) {
+            cart[idstr][0] = 20;
+            alert("Maximum Quantity is 20!!!")
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        update(cart);
+        updatecart(cart);
+        orders(cart);
+        price = cart[idstr][1]
+        qty = cart[idstr][0]
+        var total = price * qty;
+        document.getElementById("price" + text).innerText = total;
+        totalprice(cart);
+    });
+    for(var item in cart){
+        var text = item.slice(2, )
+        price = cart[item][1]
+        qty = cart[item][0]
+        var total = price * qty;
+        document.getElementById("price" + text).innerText = total
+    }
+    document.getElementById('carts').addEventListener('click',function(){
+        update(cart);
+        updatecart(cart);
+        orders(cart);
+    })
+    function getObjkey(obj,value){
+        return Object.keys(obj).find(key => obj[key] === value);
+    }
+    ordercart = {}
+    document.getElementById('placeorder').addEventListener('click',function(){
+        var items = cart
+        var arr = []
+        var finalprice = document.getElementById('mainprice').innerText;
+        for(var item in items){
+            var name = item
+            text = name.slice(2, )
+            var qnty = items[item][0]
+            var price = items[item][1]
+            var names = document.getElementById('names' + text).innerText;
+            ordercart[name] = [qnty,price,names,finalprice];
+            arr.push(text)
+            localStorage.setItem("ordercart",JSON.stringify(ordercart))
+            document.getElementById("orderid").setAttribute("value", arr)
+        }
+    })
+    document.getElementById("clearitem").addEventListener("click",function(){
+        localStorage.removeItem('cart');
+        $("#cartitem").click();
+        window.location.href = "/card/product/";
+    })
+</script>
+{% endblock %}

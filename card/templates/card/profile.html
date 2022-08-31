@@ -1,0 +1,98 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+Order Details
+{% endblock %}
+{% block css %}
+<style>
+.container .main{
+    height: 100%;
+    width: auto;
+    /* border: 2px solid black; */
+}
+.container .main .profile{
+    height: 100px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+.container .main .profile .image{
+    height: 100%;
+    width: 8%;
+    border-radius: 10px;
+}
+.container .main .profile .image img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+.container .main .profile .username{
+    height: 100%;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 30px;
+}
+.container .main .personal{
+    height: 100%;
+    width: auto;
+    /* border: 2px solid black; */
+}
+
+@media screen and (max-width: 900px){
+    .container .main .profile .image{
+        width: 15%;
+    }
+}
+@media screen and (max-width: 700px){
+    .container .main .profile .image{
+        width: 20%;
+    }
+}
+@media screen and (max-width: 400px){
+    .container .main .profile .image{
+        width: 25%;
+    }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    {% for i in users %}
+    <div class="main">
+        <div class="profile">
+            <div class="image">
+                <img src="/static/card/user.png" alt="">
+            </div>
+            <div class="username">
+                Hello, <br>
+                <b class="mx-2"> {{i.username}}</b>
+            </div>
+        </div>
+        <div class="personal mt-3">
+            <h3>Personal Information</h3><hr><br>
+            <h4>First Name - <b>{{i.first_name}}</b></h4><hr>
+            <h4>Last Name - <b>{{i.last_name}}</b></h4><hr>
+            <h4>Email Address - <b>{{i.email}}</b></h4><hr>
+        </div>
+    </div>
+    {% endfor %}
+    {% for item in orderdetail %}
+    <div class="main">
+        <div class="personal">
+            <h4>Mobile Number - <b>{{item.o_mobile}}</b></h4><hr>
+            <h4>Address - <b>{{item.o_address}}</b></h4><hr>
+            <h5>City - <b>{{item.o_city}}</b></h5>
+            <h5>State - <b>{{item.o_state}}</b></h5>
+            <h5>Pin - <b>{{item.o_pin}}</b></h5><hr>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block js %}
+<script>
+
+</script>
+{% endblock %}

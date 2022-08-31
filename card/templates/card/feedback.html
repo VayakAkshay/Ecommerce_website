@@ -1,0 +1,178 @@
+{% extends 'card/basic.html' %}
+{% block title %}
+Order Details
+{% endblock %}
+{% block css %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap');
+.container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+}
+.container .quize-container{
+    margin-top: 30px;
+    height: 100%;
+    width: 35%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.container .quize-container h2{
+    text-align: center;
+    font-size: 25px;
+    padding-top: 40px;
+}
+.container .quize-container ul li{
+    list-style: none;
+    padding-top: 30px;
+    font-weight: bold;
+}
+.container .quize-container button{
+    height: 50px;
+    width: 100%;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 70px;
+    border: none;
+    background-color: black;
+    color: white;
+}
+.container .quize-container button:hover{
+    background-color: yellowgreen;
+    color: black;
+}
+@media(max-width: 1024px){
+    .container .quize-container{
+        width: 35%;
+    }
+}
+@media(max-width: 900px){
+    .container .quize-container{
+        width: 50%;
+    }
+}
+@media(max-width: 750px){
+    .container .quize-container{
+        width: 70%;
+    }
+}
+@media(max-width: 550px){
+    .container .quize-container{
+        width: 90%;
+    }
+}
+.container .thanks{
+    height: 90vh;
+    width: 100%;
+    background-image: url("/static/card/thanks.gif");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items:flex-end;
+}
+.container .thanks .block button{
+    height: 50px;
+    width: 150px;
+    font-size: 20px;
+}
+
+@media screen and (max-width: 350px){
+    #que1{
+        font-size: 20px;
+    }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="quize-container mt-5" id="last">
+        <h2 id="que1">Question</h2>
+        <ul>
+            <li>
+                <input type="radio" class="answered" id="a" name="answer">
+                <label id="ans1">Answer 1</label>
+            </li>
+            <li>
+                <input type="radio" class="answered" id="b" name="answer">
+                <label id="ans2">Answer 2</label>
+            </li>
+        </ul>
+        <button id="next">Submit</button>
+    </div>
+    <div class="thanks" id="thanks">
+        <div class="block">
+            <!-- <h2><b> Thank you for your Valuable feedback</b></h2> -->
+            <a href="/card/product/">
+                <button class="btn btn-primary buy-pro mb-2" >
+                    Go to Shop
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+const myquize = [
+    {
+        question :"Did you satisfied with the overall experience?",
+        a: "Yes",
+        b: "No",
+    },
+    {
+        question: "Any problem to buy on our website?",
+        a : "Yes",
+        b : "No",
+    },
+    {
+        question: "Did you like our product?",
+        a : "Yes",
+        b : "No",
+    },
+    {
+        question: "we should do improve our service?",
+        a : "Yes",
+        b : "No",
+    },
+]
+var item = 0
+document.getElementById("que1").innerText = myquize[item].question
+document.getElementById("ans1").innerText = myquize[item].a
+document.getElementById("ans2").innerText = myquize[item].b
+function deselect(){
+    let answered = document.querySelectorAll('.answered');
+    answered.forEach(data=>{
+        data.checked = false;
+    });
+}
+document.getElementById("thanks").style.display = "none";
+document.getElementById("next").addEventListener("click",function(){
+    let answered = document.querySelectorAll('.answered');
+    answered.forEach(data=>{
+        if(data.checked == false){
+            console.log("Please")
+        }
+        else{
+            item = item + 1
+            if(item<4){
+                document.getElementById("que1").innerText = myquize[item].question
+                document.getElementById("ans1").innerText = myquize[item].a
+                document.getElementById("ans2").innerText = myquize[item].b
+                deselect();
+            }
+            else{
+                document.getElementById("last").style.display = "none";
+                document.getElementById("thanks").style.display = "flex";
+            }
+        }
+    });
+})
+
+
+</script>
+{% endblock %}

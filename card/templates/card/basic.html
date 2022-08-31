@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %} {% endblock %}</title>
+  <script src="https://kit.fontawesome.com/6e04d39f81.js" crossorigin="anonymous"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+  <style>
+    .modal {
+      padding: 10px;
+    }
+
+    .userss {
+      list-style: none;
+    }
+
+    .userdata {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .custom-tooltip {
+      --bs-tooltip-bg: var(--bs-primary);
+    }
+    .userdata .username {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 10px;
+    }
+    .containers .dropdown2{
+      display: none;
+    }
+    @media screen and (max-width: 991px){
+      .containers{
+        height: 50px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .dropdown{
+        display: none;
+      }
+      .containers .dropdown2{
+        display: block;
+      }
+    }
+  </style>
+  {% block css %}{% endblock %}
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Shopping Center</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/card/about">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/card/product/">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/card/contact/">Contact Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/card/track/">Track Order</a>
+          </li>
+        </ul>
+
+        {% if user.is_authenticated %}
+        <div class="nav-item dropdown mx-5">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i style='font-size:24px; display: inline;' class='fas'>&#xf406;</i>
+            <h6 class="users" style="display: inline;">{{request.user}}</h6>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/card/profile/">My Profile</a></li>
+            <li><a class="dropdown-item" href="/card/logout/">Logout</a></li>
+            <li><a class="dropdown-item" href="/card/feedback/">Feedback</a></li>
+          </ul>
+        </div>
+        {% endif %}
+
+        <form action="/card/search/" class="d-flex" role="search" method="get">
+          <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search"
+            aria-label="Search" />
+          <button class="btn btn-outline-dark" type="submit">Search</button>
+        </form>
+        
+        <div class="containers mt-1">
+          {% if user.is_authenticated %}
+          <div class="nav-item dropdown2">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i style='font-size:24px; display: inline;' class='fas'>&#xf406;</i>
+              <h6 class="users" style="display: inline;">{{request.user}}</h6>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/card/profile/">My Profile</a></li>
+              <li><a class="dropdown-item" href="/card/logout/">Logout</a></li>
+              <li><a class="dropdown-item" href="/card/feedback/">Feedback</a></li>
+            </ul>
+          </div>
+          {% endif %}
+          <form action="/card/order/" method="post">{% csrf_token %}
+            <input type="hidden" id="id" name="id">
+            <button class="btn btn-dark mx-2" id="cartitem">Cart(<span id="carts"></span>)</button>
+            <!-- <button type="button" class="btn btn-secondary" id="popcart" data-html="true" data-bs-toggle="tooltip" data-bs-placement="bottom" data-content="Hello">
+              Tooltip on bottom
+            </button> -->
+          </form>
+        </div>
+        {% if not user.is_authenticated %}
+        <a class="btn btn-primary mx-1" data-bs-toggle="modal" href="#modal1" role="button">Login</a>
+        {% endif %}
+
+      </div>
+    </div>
+  </nav>
+  {% for message in messages %}
+  <div class="alert alert-{{message.tags}} mt-0 mx-0v mb-0" id="alert" role="alert">
+    {{message}}
+  </div>
+  {% endfor %}
+
+  <div class="modal fade" id="modal1" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/card/login/" method="post">{% csrf_token %}
+          <div class="mb-3">
+            <label for="name" class="form-label">User Name</label>
+            <input type="text" name="username" class="form-control" id="fname" aria-describedby="emailHelp"
+              placeholder="Enter First Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="pass" class="form-label">Password</label>
+            <input type="password" name="pass" class="form-control" id="pass" aria-describedby="emailHelp"
+              placeholder="Enter Password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button><br><br>
+          Don't have an Acount <a class="mx-1" data-bs-toggle="modal" href="#modal2">Regester</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal">
+        <div class="modal-header">
+          <h5>Sign Up</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/card/signup/" method="POST">{% csrf_token %}
+          <div class="mb-3">
+            <label for="name" class="form-label">User Name</label>
+            <input type="text" name="username" class="form-control" id="username" aria-describedby="emailHelp"
+              placeholder="Enter User Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">First Name</label>
+            <input type="text" name="fname" class="form-control" id="fname" aria-describedby="emailHelp"
+              placeholder="Please Choose Unique username" required>
+          </div>
+          <div class="mb-3">
+            <label for="lname" class="form-label">Last Name</label>
+            <input type="text" name="lname" class="form-control" id="lname" aria-describedby="emailHelp"
+              placeholder="Enter Last Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp"
+              placeholder="Enter your Email" required>
+          </div>
+          <div class="mb-3">
+            <label for="pass" class="form-label">Password</label>
+            <input type="password" name="pass" class="form-control" id="pass" aria-describedby="emailHelp"
+              placeholder="Enter Password" required>
+          </div>
+          <div class="mb-3">
+            <label for="cpass" class="form-label">Confirm Password</label>
+            <input type="password" name="cpass" class="form-control" id="cpass" aria-describedby="emailHelp"
+              placeholder="Enter Confirm Password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button><br><br>
+          Dont have an Account? <a class="mx-1" data-bs-toggle="modal" href="#modal1">Login</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% block content %}{% endblock %} {% block container %}{% endblock %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+</body>
+<script>
+  if (localStorage.getItem("cart") == null) {
+    var cart = {};
+  } else {
+    cart = JSON.parse(localStorage.getItem("cart"));
+  }
+  function updatecart(cart) {
+    var count = 0;
+    for (var item in cart) {
+      count = count + cart[item][0];
+      document.getElementById("carts").innerText = count;
+    }
+  }
+  updatecart(cart);
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+  cart = JSON.parse(localStorage.getItem("cart"));
+  function orders(cart) {
+    var arr = [];
+    for (var items in cart) {
+      var ids = items.slice(2,);
+      arr.push(ids);
+    }
+    document.getElementById('id').setAttribute("value", arr);
+  }
+  orders(cart);
+  document.getElementById('cartitem').addEventListener('click', function () {
+    orders(cart);
+  })
+  setTimeout(function () {
+    $("#alert").css({"display":"none"});
+  }, 4000);
+</script>
+{% block js%}
+{% endblock %}
+</html>
